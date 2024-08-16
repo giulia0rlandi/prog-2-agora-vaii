@@ -33,6 +33,7 @@ deve alterar a própria lista recebida
 #1a
 L=[10,-10,3,89,34,-66,23,9,89,12,23,34,-11,20,31,89,20]
 
+
 def qualMaior(lista):
     maior = lista[0]
     for num in lista:
@@ -49,21 +50,12 @@ def ondeMaior(lista):
     for (pos,num) in enumerate(lista):
         if num == qualMaior(lista):
             return pos
-    #return lista.index(89)
 
 #---------------------------------------------------------------------------------------------------------
     
 #1c
 
 def ondeTodosMaior(lista):
-    # lnova = []
-    # num = lista.index(89)
-    # l.append(num)
-    # return lnova
-    
-    
-    # lnova = list(lista.index(89))
-    # return 
     maior= qualMaior(lista)
     lnova = []
     for (pos,num) in enumerate(lista):
@@ -97,8 +89,33 @@ def somaPosteriores(lista):
         soma+=num
     return soma
 
-            
+#---------------------------------------------------------------------------------------------------------
 
+#1f
+
+# def alteraPares(lista):
+#     for i, num in enumerate(lista):
+#       if num % 2 == 0:
+#           lista[i] *= 2  
+                
+# L=[10,-10,3,89,34,-66,23,9,89,12,23,34,-11,20,31,89,20]        
+#print(alteraPares(L))
+
+def alteraPares(lista):
+    lnova = []
+    for el in lista:
+      if el % 2 == 0:
+          lnova.append(el*2)
+      else:
+          lnova.append(el)
+    return lnova
+                
+L=[10,-10,3,89,34,-66,23,9,89,12,23,34,-11,20,31,89,20]        
+
+print(alteraPares(L))
+
+            
+            
 '''2) Uma pessoa fez várias apostas (jogos) de 6 a 10 números na Megasena. Os jogos dessa pessoa estão
 guardados como uma lista de listas, em que cada lista interna corresponde a uma aposta. O resultado do sorteio da
 Megasena é representado por meio de uma lista de 6 elementos.
@@ -119,12 +136,27 @@ Lista de apostas: [ [6,3,18,49,45,57], [6,2,25,37,38,39,42,54], [51,18,37,40,44,
 
 Resultado do sorteio: [18,6,40,42,51,58
                        ]
-Lista que deve ser retornada: [3, [ [4, 18, 37, 40, 44, 51], [6, 25, 40, 41, 51, 52, 57] ] ]'''
+Lista que deve ser retornada: [3, [ [4, 18, 37, 40, 44, 51], [6, 25, 40, 41, 51, 52, 57] ] ]
+----------------------------------------------------------------------------------------------------------
+'''
 
+#2a
 
+lapostas: [ [6,3,18,49,45,57], [6,2,25,37,38,39,42,54], [51,18,37,40,44,4], [6,25,40,41,51,52,57], [1,2,6,37,49,59] ]
 
+lresultado: [18,6,40,42,51,58]
 
-
+def maiorNumeroAcertos(lapostas,lresultado):
+    qtd = 0
+    lnova = []
+    for lista in lapostas:
+        for num in lista:
+            if num in lresultado:
+                qtd+=1
+                
+    return lnova
+                
+                       
 
 
 
@@ -146,9 +178,3 @@ Caso a função gerarSituacaoFinal receba a lista mediaFinais como parâmetro, a
 retornada:
 lst = [ [ 'joão', [ 'INF1025','INF1026' ] ], [ 'maria', [ 'INF1025' ] ], [ 'josé', [] ] ]
 Escreva um programa em Python para testar a sua implementação da função gerarSituacaoFinal.'''
-
-    
-    
-
-
-
