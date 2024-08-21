@@ -55,49 +55,109 @@ l = [1,2,3,4,4,3,2,1,1,2,3,4,5,6,6,6,6,4,3,2,1]
          (valor antigo) caso contrário.
  
     Atenção: a tupla de retorno pode ter 1 ou 2 valores
-    Construa um programa para testar sua função, exibindo o(s) valor(es). 
+    Construa um programa para testar sua função, exibindo o(s) valor(es).''' 
 
+def reajusta(mi,ma,p,tx):
+    if p >= mi and p <= ma:
+        reajuste = p*(tx+1)
+        return (p,reajuste)
+    else:
+        return (p,)
+    
+t= reajusta(10,20,15,1)
+if len(t) == 2:
+    print(f'Preço = {t[0]}, Reajuste = {t[1]}')
+else:
+    print('Preço = {t[0]}')
 
-4)
+'''4)
 Uma conta a pagar é representada como uma tupla de 3 elementos:
     (descrição, valor, dtPagto),
-onde dtPagto é uma string no formato dd/mm
+onde dtPagto é uma string no formato dd/mm'''
 
-4A) Escreva uma funcao denominada exibeContas para mostrar na tela,
-    um por linha, os dados de cada conta de uma tupla de contas a
-    pagar recebida (tupla de tuplas).
-    
-4B) Escreva uma funcao denominada valorMedioContas que recebe 
-    uma tupla de contas a pagar (tupla de tuplas) e retorna o valor
-    médio das contas
-    
-4C) Escreva uma funcao denominada eixbeContasMaisCarasQueValorMedio
-    que recebe uma tupla de contas a pagar (tupla de tuplas) e 
-    exibe o valor médio das contas e todas as contas a pagar
-    cujo valor é superior ao  valor médio
-    Esta função deve ativar a função 4B
-    
-4D)Escreva uma funcao denominada contasMaisCarasQueValorMedio
-    que recebe uma tupla de contas a pagar (tupla de tuplas que representam 
-    as contas a pagar) e 
-    retorna uma tupla com dois valores: 
-        (o valor médio das contas, tupla de contas com valor > valor médio)
-    Esta função deve ativar a função 4B
-    
-4E) Escreva uma funcao denominada contasDaData que receba uma tupla
-    de contas a pagar e uma data, e exibe as contas a pagar nessa data
+# 4)
+# Uma conta a pagar é representada como uma tupla de 3 elementos:
+#     (descrição, valor, dtPagto),
+# onde dtPagto é uma string no formato dd/mm
 
-    
-4F) Escreva uma funcao denominada exibeDescrValor que receba uma
-    tupla de contas a pagar, um mês inicial  e um mês final, e  retorne 
-    uma tupla com as contas (tuplas que representam as contas a pagar) 
-    a serem pagas nesse intervalo (extremos inclusos).
+# 4A) Escreva uma funcao denominada exibeContas 
+#     para mostrar na tela,
+#     um por linha, os dados de cada conta de uma 
+#    tupla de contas a
+#     pagar recebida (tupla de tuplas).
+def exibeContas(tupla_de_tuplas):
+  for (descricao, valor, dtPagto) in tupla_de_tuplas:     
+      print(f" conta: {descricao} --> R$ {valor} em {dtPagto}")
 
+# 4B) Escreva uma funcao denominada 
+#     valorMedioContas que recebe 
+#     uma tupla de contas a pagar (tupla de tuplas) e 
+#     retorna o valor
+#     médio das contas
+def valorMedioContas(tupla_de_tuplas):
+    soma=0
+    for (descricao, valor, dtPagto) in tupla_de_tuplas:     
+        soma+=valor
+    return soma/len(tupla_de_tuplas)
+
+# 4C) Escreva uma funcao denominada 
+ #    eixbeContasMaisCarasQueValorMedio
+#     que recebe uma tupla de contas a pagar (tupla de tuplas) e 
+#     exibe o valor médio das contas e todas
+#     as contas a pagar
+#     cujo valor é superior ao  valor médio
+#     Esta função deve ativar a função 4B
+def exibeContasMaisCarasQueValorMedio(tupla_de_tuplas):
+    media=valorMedioContas(tupla_de_tuplas)
+    for (descricao, valor, dtPagto) in tupla_de_tuplas:     
+        if valor > media:
+            print(f" conta: {descricao} --> R$ {valor} em {dtPagto}")
+    
+# 4D)Escreva uma funcao denominada 
+#    contasMaisCarasQueValorMedio
+#     que recebe uma tupla de contas a pagar (tupla de tuplas que representam 
+#     as contas a pagar) e 
+#     retorna uma tupla com dois valores: 
+#         (o valor médio das contas, 
+#           tupla de contas com valor > valor médio)
+#     Esta função deve ativar a função 4B
+def contasMaisCarasQueValorMedio(tupla_de_tuplas):
+    media=valorMedioContas(tupla_de_tuplas)
+    l=[]
+    for t in tupla_de_tuplas:     
+        if t[1] > media:
+            l.append(t)
+    return (media, tuple(l))
+
+# 4E) Escreva uma funcao denominada contasDaData que 
+#     receba uma tupla
+#     de contas a pagar e uma data, 
+#     e exibe as contas a pagar nessa data
+def contasDaData(tupla_de_tuplas,dt):
+   
+    for (descricao, valor, dtPagto) in tupla_de_tuplas:     
+        if dtPagto == dt:
+            print(f" conta: {descricao} --> R$ {valor} em {dtPagto}")
  
-    Escreva um programa completo para testar todas as funções do ex4. A tupla de 
-    contas a pagar deve ser criada por enumeração.
+    
+# 4F) Escreva uma funcao denominada 
+#    exibeDescrValor que receba uma
+#     tupla de contas a pagar, 
+#     um mês inicial  e um mês final, e  
+#     retorne 
+#     uma tupla com as contas 
+#     (tuplas que representam as contas a pagar) 
+#     a serem pagas nesse intervalo (extremos inclusos).
+#
+def exibeDescrValor(tupla_de_tuplas,mesI,mesF):
+    for (descricao, valor, dtPagto) in tupla_de_tuplas:     
+        mesdtPagto=dtPagto.split('/')[1] #dtPagto[3:5]
+        if mesdtPagto>= mesI and mesdtPagto<=mesF:
+            print(f" conta: {descricao} --> R$ {valor} em {dtPagto}")
+   
 
-5)  Desenvolva a função raízes, que calcula e retorna as raízes x1 e x2 de uma
+
+'''5)  Desenvolva a função raízes, que calcula e retorna as raízes x1 e x2 de uma
     equação do segundo grau, do tipo ax**2+ bx + c = 0.
     a, b e c representam os coeficientes da equação.
     Observações:
