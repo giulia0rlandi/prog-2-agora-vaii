@@ -1,0 +1,113 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+Este é um arquivo de script temporário.
+"""
+
+
+"""
+1) Faça uma função que receba estas 
+tabelas armazenadas em tuplas de 
+tuplas  e 
+retorne um dicionário produto:depósito
+
+
+2)-->Dicionário de Frequências
+Faça uma função que  receba  
+o dicionário produtos x depósito  e
+retorne um dicionário depósito: qt de produtos
+
+
+3)-->Dicionário de Agrupamentos
+Faça uma função que  receba  
+o dicionário produtos x depósito  e
+retorne um dicionário depósito: lista de produtos
+
+
+4)-->Dicionário de dicionários
+Faça uma função que  receba  
+o dicionário produto: tipo  e
+o dicionário  tipo:depósito
+retorne um dicionário de dicionários onde
+dicionário externo tem
+          como chave: o produto
+                      valor: dicionário com
+                                  chave: 'tipo' , valor: tipo do produto
+                                  chave: 'dep' , valor: nome do depósito
+-->Dicionário de Agrupamentos
+"""
+tProdTipo = ( 
+        ('álcool Gel', 'higiene'),
+        ('álcool90','limpeza'),
+        ('água','bebida'),
+        ('refrigerante','bebida'),
+        ('chocolate','bebida'),
+        ('desinfetante','limpeza'),
+        ('sabonete','higiene'),
+        ('cerveja','bebida'),
+        ('água sanitária','limpeza'),
+        ('biscoito','alimento'),
+        ('café','matinal'),
+        ('leite','matinal')
+        )
+tTipoDep = (
+        ('higiene','z1'),
+        ('limpeza','z1'),
+        ('bebida','z2'),
+        ('alimento','z3'),
+        ('matinal','z3'),
+         )
+dProdTipo=dict(tProdTipo)
+dTipoDep=dict(tTipoDep)
+# 1) Construindo o dicionário produto:depósito a partir das tabelas 
+dProdDep={}
+for (prod,tipo) in dProdTipo.items():
+    deposito=dTipoDep.get(tipo,'indeterminado')
+    if deposito != 'indeterminado':
+        dProdDep[prod]=deposito
+    
+# 2) Quantos produtos estão em cada depósito -->  um totalizador por depósito
+#    dicFreq : chave : depósito, valor qt de produtos
+# chave: depósito   valor : qt
+#  {}
+# {'z1':2}
+#{'z1':3,'z2':2}
+#{'z1':3,'z2':2,'z3':1}
+dQtDep={}
+for (prod,dep) in dProdDep.items():
+    qtAtual=dQtDep.get(dep,0)
+    novaQt=qtAtual+1
+    dQtDep[dep]=novaQt
+    
+    
+# 3) quais são os produtos em cada depósito  --> lista de produtos por depósito
+#     dicGrupos: chave: depósito, valor:lista de produtos deste depósito
+# chave: depósito   valor : lista de produtos
+#  {}
+# {'z1':[ag]}
+# {'z1':[ag,a90]}
+# {'z1':[ag,a90],'z2':[agua,refri]}
+# {'z1':[ag,a90],'z2':[agua,refri],'z3':[biscoito]}
+
+dlProdsDep={}
+for (prod,dep) in dProdDep.items():
+     lAtual=dlProdsDep.get(dep,[])
+     lAtual.append(prod)
+     dlProdsDep[dep]=lAtual
+   
+ # 4)  dicionário cujo valor é outro dicionário
+
+#dProdTipo, dTipoDep -->  novo dic
+#    chave: prod
+#    valor: {'tipo':...  'deposito':...}
+dProd_dicTipoDep={}
+for (prod,tipo) in dProdTipo.items():
+    deposito=dTipoDep.get(tipo,'indeterminado')
+    dProd_dicTipoDep[prod]= {'Tipo':tipo, 'Deposito':deposito}
+    
+#
+
+# Qual o depósito do chocolate?
+dInterno=dProd_dicTipoDep['chocolate']
+print(dInterno.get('Deposito'))
