@@ -1,0 +1,35 @@
+class Arquivo:
+    def __init__ (self, nome, autor, di, df, txt=''):
+        self.nome = nome
+        self.autor = autor
+        self.di = di
+        self.df = df
+        self.txt = txt
+    
+    def __str__(self):
+        return "{}.txt , {}, {}, tamanho: {}".format(self.nome, self.autor, self.di, self.tamanho())
+    
+    def __repr__(self):
+        return "{}.txt , {}, {}, tamanho: {}".format(self.nome, self.autor, self.di, self.tamanho())
+    
+    def __add__(self, outro):
+        return Arquivo(self.nome + outro.nome, 'sistema', self.di, self.df, self.txt + '\n' + outro.txt)
+    
+    def tamanho(self):
+        return len(self.txt)
+    
+    def substituiTexto(self, tnovo, da):
+        self.txt = tnovo
+        self.df = da
+        return True
+    
+    def adicionaTexto(self, txt, da):
+        self.txt += txt
+        self.df = da
+        return True
+    
+    def exibeTexto(self):
+        print(self.txt)
+        
+    def ultimaAlteracaoNaData(self, da):
+        return self.df == da
