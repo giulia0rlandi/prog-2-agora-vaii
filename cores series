@@ -1,0 +1,127 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 27 00:32:54 2019
+
+
+Topicos: filtro
+         concat(), replace(), update()
+         operacao aritmetica com operador
+         operacao aritmetica com metodo
+         concatenacao
+         
+"""
+import pandas as pd
+
+print('\nFiltros:')
+
+print('\n-------------------------------------------------')
+dCores= {'amarelo':82, 'vermelho':65, 'laranja':52,'rosa':98, 'azul':75 ,
+          'verde':45, 'ciano':10, 'branco':89, 'preto':98, 
+          'turquesa':23,'marrom':56, 'cinza':43,}
+dTipos={'amarelo':'quente', 'vermelho':'quente', 'laranja':'quente', 'azul':'fria' ,
+          'verde':'fria', 'ciano':'fria', 'branco':'neutra', 'preto':'neutra', 
+          'turquesa':'fria','marrom':'neutra', 'cinza':'neutra','rosa':'quente'}
+dRGB={'amarelo':(255,255,0), 'vermelho':(255,0,0), 'laranja':(255,165,0), 
+      'azul':(0,0,255) ,'verde':(0,128,0), 'violeta':(0,255,255), 
+      'preto':(0,0,0), 'marrom':(160,82,45), 'cinza':(128,128,128),
+      'rosa':(255,192,203)}
+
+
+sCores= pd.Series(dCores)
+print('\nsCores:')
+print(sCores)
+
+sTipos= pd.Series(dTipos)
+print('\nsTipos:')
+print(sTipos)
+
+sRGB= pd.Series(dRGB)
+print('\nsRGB:')
+print(sRGB)
+
+print('\n-------------------------------------------------')
+
+print('\n1-Com 50 pessoas ou mais:')
+s1 = sCores.values >=50
+print(sCores.loc[s1])
+
+
+print('\n-------------------------------------------------')
+print('\n2-Selecionando cores preferidas com 50 ou mais pessoas :')
+print(sCores.loc[s1].index)
+
+
+print('\n-------------------------------------------------')
+print('\n3-Cores com menos de 20 ou mais de 80 pessoas:')
+s2 = (sCores.values < 20) | (sCores.values >80)
+print(sCores.loc[s2])
+
+
+print('\n4-Cores com 20 até 80 pessoas (dentro do intervalo):')
+s3 = (sCores.values >= 20) & (sCores.values <=80)
+print(sCores.loc[s3])
+
+
+print('\n4-Cores com maior número de pessoas:')
+s4 = sCores.values == sCores.max()
+print(sCores.loc[s4].index)
+
+
+print('\n-------------------------------------------------')
+print('\n5-Cores quentes - Criar series sQuentes')
+s5 = sTipos=='quente'
+sQuentes = sCores[s5]
+print(sQuentes)
+
+
+print('\n-------------------------------------------------')
+print('\n6-Qt de pessoas em cores quentes')
+val = sQuentes.values.sum()
+print(val)
+
+
+print('\n-------------------------------------------------')
+print('\n7-Total de pessoas que preferem  cores quentes')
+# ué n era a mesma coisa???
+val = sQuentes.values.sum()
+print(val)
+
+
+print('\n-------------------------------------------------')
+print('\n8-Atualizando em 10% do total as pessoas que preferem  cores quentes')
+sCores.loc[s5]=(sQuentes*1.1).apply(int)
+print(sCores.loc[s5])
+
+
+print('\n-------------------------------------------------')
+print('\n9-RGB Cores neutras')
+s6 = sTipos=='neutra'
+# sNeutras = sCores[s6]
+sNeutras = sRGB.index.isin(sTipos.loc[s6].index)
+print(sNeutras)
+# ainda nao entendi como faz esse. eu sei que tem que tem q procurar as cores neutras
+# no sTipos, aí pegar o índice delas e jogar no sRGB pra ver quem tem em comum mas n foi
+
+print('\n-------------------------------------------------')
+print('\n10-Eliminando cores neutra sem RGB')
+
+print("Cores neutras:")
+
+print("Cores neutras após eliminar as que não tem RGB:")
+
+
+print('\n-------------------------------------------------')
+print('\n11-Qt de Cores frias ou neutras')
+
+
+print('\n-------------------------------------------------')
+print('\n12-Qt de pessoas das Cores frias que contenham a letra a')
+
+
+print('\n-------------------------------------------------')
+print('\n13-Qt de pessoas das cores com 1ª ou 3ª letra sendo a')
+# ind=sCores.index.str.split('')
+# print(ind)
+# f13=(ind.str.get(1)=='a') |(ind.str.get(3)=='a')
+
+# print(sCores.loc[f13]) 
