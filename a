@@ -1,0 +1,69 @@
+# Questão 1
+s1 = srGenProf.sort_index()
+print(pd.concat([s1.head(4), s1.tail(4)]))
+
+idade_media = srIdProf.groupby(level=0).mean()
+print(idade_media)
+
+profissoes_unicas = srIdProf.index.unique()
+print(profissoes_unicas)
+
+freq_profissoes = srGenProf.index.value_counts()
+print(freq_profissoes)
+
+idade_min = srIdProf.min()
+profissoes_jovens = list(srIdProf[srIdProf == idade_min].index)
+print(profissoes_jovens)
+
+percent_bombeiro = (srGenProf[srGenProf == 'M'].size / srGenProf.size) * 100
+print(f'{percent_bombeiro:.2f}%')
+
+estatisticas_genero = srIdGen.groupby(level=0).agg(['mean', 'median', 'min', 'max'])
+print(estatisticas_genero)
+
+valores_ausentes = srIdProf.isna().sum()
+print(valores_ausentes)
+
+profissoes_20_40 = srIdProf[(srIdProf >= 20) & (srIdProf <= 40)]
+print(profissoes_20_40)
+
+# Questão 2
+def calcula_aposentadoria(idade):
+    if idade >= 40:
+        return 67 - idade
+    else:
+        return 72 - idade
+
+srAposentadoria = srIdGen.apply(calcula_aposentadoria)
+print(srAposentadoria.sort_index())
+
+tempo_aposentadoria_medio = srAposentadoria.groupby(level=0).mean()
+tempo_aposentadoria_medio.plot(kind='barh')
+plt.title('Tempo médio faltante para aposentadoria por gênero')
+plt.show()
+
+# Questão 3
+masculino = srGenProf[srGenProf == 'M']
+trabalhadores_m_ambiente = masculino.groupby(srAmbProf).count()
+print(trabalhadores_m_ambiente)
+
+frequencia_genero_ambiente = pd.crosstab(srGenProf, srAmbProf)
+print(frequencia_genero_ambiente)
+
+media_idade_externo = srIdProf[srAmbProf == 'EXTERNO'].mean()
+print(media_idade_externo)
+
+# Questão 4
+faixas_idade = pd.cut(srIdProf, bins=[0, 30, 50, 100], labels=["JOVEM", "ADULTO", "SENIOR"])
+contagem_faixas = faixas_idade.value_counts()
+
+contagem_faixas.plot.pie(autopct='%1.1f%%', startangle=90)
+plt.title('Distribuição das Faixas Etárias')
+plt.ylabel('')
+plt.show()
+
+faixa_genero_contagem = pd.crosstab(faixas_idade, srGenProf)
+print(faixa_genero_contagem)
+
+idade_estatisticas_ambiente_faixa = srIdProf.groupby([srAmbProf, faixas_idade]).agg(['min', 'max', 'median', 'mean'])
+print(idade_estatisticas_ambiente_faixa)
