@@ -129,7 +129,7 @@ print('\n------------------------------------------------------')
 print('1.a- Cidades com com maiores taxa crescimento e maiores IDH')
 print('------------------------------------------------------')
 
-print(dfCidades['TAXA_CRESCIMENTO'].sort_values(ascending=False).head(5))
+print(dfCidades.sort_values(by = ['TAXA_CRESCIMENTO', 'IDH'], ascending=False).head(5))
 
 print('\n------------------------------------------------------')
 print('1.b- Média da taxa de crescimento por região')
@@ -157,17 +157,18 @@ print('\n------------------------------------------------------')
 print('1.e- Pior desempenho, por cidade ( Matemática ou Português')
 print('------------------------------------------------------')
 
-g1e = dfDesempenhoEscolar.groupby('CIDADE')
+burros = dfDesempenhoEscolar[['NOTA_MATEMATICA','NOTA_PORTUGUES']].idxmin(axis=1)
 
-print(g1e.agg({'NOTA_MATEMATICA':'min','NOTA_PORTUGUES':'min' }))
+print(burros)
 
 print('\n------------------------------------------------------')
 print('1.f- Gráfico de pizza doa disciplina de pior desempenho, por cidade ( Matemática ou Português')
 print('------------------------------------------------------')
 
-# df1f = g1e['TAXA_CRESCIMENTO']
-# df1f.plot(kind = 'pie')
-# plt.show()
+qtd=burros.value_counts()
+qtd.plot.pie(autopct="%.1f")
+plt.show()
+
 
 print('\n------------------------------------------------------')
 print('1.g- taxa de aprovação mediana das cidades com NOTA_MATEMATICA > 6.')
@@ -182,7 +183,6 @@ print('1.h- Uma cidade com o menor índice de pobreza')
 print('------------------------------------------------------')
 
 f1h = dfIndicadoresSociais[dfIndicadoresSociais['POBREZA'] == dfIndicadoresSociais['POBREZA'].min() ]
-
 print(f1h.index)
 
 print('\n------------------------------------------------------')
@@ -239,12 +239,10 @@ print('\n------------------------------------------------------')
 print('2.c- Nível de Pobreza ordenado por nome da cidade')
 print('------------------------------------------------------')
 
-pobres = pd.cut(dfIndicadoresSociais['POBREZA'], bins = 3, labels = ['Baixa', 'Média', 'Alta'])
-dfIndicadoresSociais['Nível_Pobreza'] = pobres
+dfIndicadoresSociais['Nível_Pobreza'] = pd.cut(dfIndicadoresSociais['POBREZA'], bins = 3, labels = ['Baixa', 'Média', 'Alta'])
 
-df2 = dfIndicadoresSociais.sort
-
-print(pd.concat([dfIndicadoresSociais['Nível_Pobreza'].head(3), dfIndicadoresSociais['Nível_Pobreza'].tail(3)]))
+pobres = dfIndicadoresSociais.sort_index(ascending=True)
+print(pd.concat([pobres.head(3), pobres.tail(3)]))
 
 print('==============================================')
 print('Questão 3 - (1.2 pontos)')
@@ -259,13 +257,24 @@ print('\n------------------------------------------------------')
 print('3.a- Média de notas em cidades com IDH muito alto')
 print('------------------------------------------------------')
 
+f3a = dfCidades[dfCidades['CatIDH']== 'Muito Alto']
+espertos = f3a.index
+print(dfDesempenhoEscolar.loc[espertos]['Desempenho_Médio'].mean())
+
+
+print(dfDesempenhoEscolar[dfCidades[dfCidades['CatIDH']== 'Muito Alto']][['NOTA_MATEMATICA', 'NOTA_PORTUGUES']].mean())
+
 print('\n------------------------------------------------------')
 print('3.b- Média da taxa de crescimento em cidades com renda média > 3000')
 print('------------------------------------------------------')
+f3b =dfCidades[dfCidades['RENDA_MEDIA']>3000]
+print(f3b['TAXA_CRESCIMENTO'].mean())
 
 print('\n------------------------------------------------------')
 print('3.c- Correlação entre Desigualdade e Taxa de Aprovação')
 print('------------------------------------------------------')
+
+print(dfIndicadoresSociais['DESIGUALDADE'].corr(dfDesempenhoEscolar['TAXA_APROVACAO']))
 
 print('==============================================')
 print('Questão 4 - (2.3 pontos)')
@@ -289,21 +298,41 @@ print('\n------------------------------------------------------')
 print('4.a - Crie o DataFrame dfCompleto concatenando dfCidades, dfDesempenhoEscolar e dfIndicadoresSociais')
 print('------------------------------------------------------')
 
+dfCompleto = pd.concat([dfCidades,dfDesempenhoEscolar,dfIndicadoresSociais], axis = 1)
+print(dfCompleto.tail(5))
+
 print('\n------------------------------------------------------')
 print('4.b - Exiba a cidade localizada na região Norte com a menor taxa de crescimento populacional')
 print('------------------------------------------------------')
+
+f4c = dfCompleto[dfCompleto['REGIAO'] == 'Norte']
+menor = f4c[f4c['TAXA_CRESCIMENTO'] == f4c['TAXA_CRESCIMENTO'].min()]
+
+print(menor.index[0])
+print(dfCompleto.query('REGIAO == "Norte"')['TAXA_CRESCIMENTO'].idxmin())
 
 print('\n------------------------------------------------------')
 print('4.c - Mostre a quantidade de cidades por categoria de IDH e nível de pobreza')
 print('------------------------------------------------------')
 
+tabfreq = pd.crosstab(dfCompleto['CatIDH'],dfCompleto['Nível_Pobreza'])
+print(tabfreq)
+
 print('\n------------------------------------------------------')
 print('4.d - Mostre a média do desempenho escolar (matemática e português) nas cidades com alta desigualdade de renda(>0.5)')
 print('------------------------------------------------------')
 
+f4c = dfCompleto[dfCompleto['DESIGUALDADE'] > 0.5]
+print(f4c.agg({'NOTA_MATEMATICA':'mean','NOTA_PORTUGUES':'mean'}))
+
+
 print('\n------------------------------------------------------')
 print('4.e - Calcule a correlação entre renda média e taxa de crescimento populacional nas cidades com IDH muito alto')
 print('------------------------------------------------------')
+
+f4e = dfCompleto[dfCompleto['CatIDH']=='Muito Alto']
+print(f4e['RENDA_MEDIA'].corr(f4e['TAXA_CRESCIMENTO']))
+
 
 print('==============================================')
 print('Questão 5 - (2.0 pontos)')
@@ -323,27 +352,56 @@ print('\n------------------------------------------------------')
 print('5.a - Cidades com taxa de pobreza acima de 25% e desempenho médio em português menor que 5')
 print('------------------------------------------------------')
 
+f5a = dfCompleto[(dfCompleto['POBREZA']> 25) & (dfCompleto['NOTA_PORTUGUES']< 5)]
+print(f5a[['POBREZA','NOTA_PORTUGUES']])
+
 print('\n------------------------------------------------------')
 print('5.b - Exiba as 3 cidades com maior renda média por região')
 print('------------------------------------------------------')
 
+g5b = dfCompleto.groupby('REGIAO')
+
+print(g5b['RENDA_MEDIA'].nlargest(3))
 
 print('\n------------------------------------------------------')
 print('5.c - POR REGIAO x Nível_Pobreza: Taxa média de crescimento nas cidades com desigualdade acima de 0.2 e IDH abaixo de 0.7')
 print('------------------------------------------------------')
 
+f5c = dfCompleto[(dfCompleto['DESIGUALDADE']> 0.2) & (dfCompleto['IDH']< 0.7)]
+
+tabfreq = pd.crosstab(f5c['REGIAO'], f5c['Nível_Pobreza'], values= f5c['TAXA_CRESCIMENTO'],aggfunc='mean')
+print(tabfreq)
+
 print('\n------------------------------------------------------')
 print('5.d - Exiba a cidade com a menor taxa de aprovação escolar e renda média acima de R$ 2500')
 print('------------------------------------------------------')
+
+f5d =(dfCompleto['TAXA_APROVACAO'] == dfCompleto['TAXA_APROVACAO'].min()) & (dfCompleto['RENDA_MEDIA']>2500)
+
+print(dfCompleto[f5d].index[0])
 
 print('\n------------------------------------------------------')
 print('5.e - Correlação entre índice de Gini e taxa de crescimento populacional nas cidades com IDH médio')
 print('------------------------------------------------------')
 
+f5e = dfCompleto[dfCompleto['CatIDH'] == 'Médio']
+print(f5e['DESIGUALDADE'].corr(f5e['TAXA_CRESCIMENTO']))
+
+
 print('\n------------------------------------------------------')
 print('5.f - Exiba as regiões com média de IDH acima de 0.8')
 print('------------------------------------------------------')
 
+g5f=dfCompleto.groupby('REGIAO')['IDH'].mean()
+f5f = g5f[g5f >0.8]
+
+print(f5f)
+
+
 print('\n------------------------------------------------------')
 print('5.g - Total de cidades com renda média acima de R$ 3000 e taxa de aprovação escolar menor que 80%')
 print('------------------------------------------------------')
+
+f5g = (dfCompleto['RENDA_MEDIA']>3000) & (dfCompleto['TAXA_APROVACAO']<80)
+qtd = (f5g.sum())
+print(qtd)
