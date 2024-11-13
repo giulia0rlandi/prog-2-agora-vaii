@@ -145,11 +145,14 @@ print('------------------------------------------------------')
 print(dfDesempenhoEscolar[['NOTA_MATEMATICA', 'NOTA_PORTUGUES']].mean())
 
 print('\n------------------------------------------------------')
-print('1.e- Pior desempenho, por cidade ( Matemática ou Português')
+print('1.e- Pior desempenho, por cidade ( Matemática ou Português)')
 print('------------------------------------------------------')
+
+s1=dfDesempenhoEscolar[['NOTA_MATEMATICA', 'NOTA_PORTUGUES']].idxmin(axis=1)
+print(s1)
+
 def disc(val):
     return val.split('_')[1]
-s1=dfDesempenhoEscolar[['NOTA_MATEMATICA', 'NOTA_PORTUGUES']].idxmin(axis=1)
 s1=s1.apply(disc)
 print(s1)
 
@@ -157,6 +160,7 @@ print('\n------------------------------------------------------')
 print('1.f- Gráfico de pizza doa disciplina de pior desempenho, por cidade ( Matemática ou Português')
 print('------------------------------------------------------')
 tf1f= s1.value_counts()
+print('tf1f\n', tf1f)
 tf1f.plot.pie(autopct="%.1f", title="Distribuição pior disciplina")
 plt.show()
 print(s1)
@@ -164,9 +168,7 @@ print(s1)
 print('\n------------------------------------------------------')
 print('1.g- taxa de aprovação mediana das cidades com NOTA_MATEMATICA > 6.')
 print('------------------------------------------------------')
-df1g=dfDesempenhoEscolar.query('NOTA_MATEMATICA > 6')
-aprovacao_mediana=df1g.TAXA_APROVACAO.median()
-#aprovacao_mediana = dfDesempenhoEscolar[dfDesempenhoEscolar['NOTA_MATEMATICA'] > 6]['TAXA_APROVACAO'].median()
+aprovacao_mediana = dfDesempenhoEscolar[dfDesempenhoEscolar['NOTA_MATEMATICA'] > 6]['TAXA_APROVACAO'].median()
 print(f"Taxa de aprovação mediana das cidades com NOTA_MATEMATICA > 6: {aprovacao_mediana}")
 
 print('\n------------------------------------------------------')
@@ -210,16 +212,20 @@ print('Questão 2 - Incluindo colunas e categorizações (1.8 pontos)')
 #          dfIndicadoresSociais após ordenar pelo nome da cidade
 #======================================================================
 
-print('\n------------------------------------------------------')
+print('\n----------------------------------------------------')
 print('2.a- Categorização do IDH')
 print('------------------------------------------------------')
 dfCidades['CatIDH'] = pd.cut(dfCidades['IDH'], bins=[0, 0.5, 0.7, 0.85, 1], labels=['Baixo', 'Médio', 'Alto', 'Muito Alto'])
 print(dfCidades['CatIDH'].value_counts(normalize=True)*100)
 
+print(dfCidades['CatIDH'].value_counts()*100/dfCidades.shape[0])
+
 print('\n------------------------------------------------------')
 print('2.b- Desempenho Médio das Notas')
 print('------------------------------------------------------')
 dfDesempenhoEscolar['Desempenho_Médio'] = dfDesempenhoEscolar[['NOTA_MATEMATICA', 'NOTA_PORTUGUES']].mean(axis=1)
+
+print('dfDesempenhoEscolar\n', dfDesempenhoEscolar)
 plt.scatter(dfDesempenhoEscolar['Desempenho_Médio'], dfDesempenhoEscolar['TAXA_APROVACAO'])
 
 plt.title("Relação entre Desempenho Médio e Taxa de Aprovação")
@@ -261,7 +267,7 @@ print('Questão 4 - (2.3 pontos)')
 
 print('==============================================')
 print('Questão 4 - Análises Combinadas e Resultados (2.3 pontos)')
-#======================================================================
+print('======================================================================')
 # 4- Análises combinadas e resultados detalhados dos dados
 #======================================================================
 
@@ -331,8 +337,15 @@ print(alta_pobreza_baixo_desempenho[['POBREZA', 'NOTA_PORTUGUES']])
 print('\n------------------------------------------------------')
 print('5.b - Exiba as 3 cidades com maior renda média por região')
 print('------------------------------------------------------')
+
+print('dfCompleto\n', dfCompleto)
+
 g5b = dfCompleto.groupby('REGIAO')
 print(g5b['RENDA_MEDIA'].nlargest(3))
+# print(g5b['RENDA_MEDIA'].sort_values(by='RENDA_MEDIA',ascending=False).head(3)) #errado. 'SeriesGroupBy' object has no attribute 'sort_values'
+
+########################
+# 2da opçao
 ########################
 def maior(grupo):
     a=grupo.sort_values(by='RENDA_MEDIA',ascending=False).head(3)    
@@ -340,13 +353,15 @@ def maior(grupo):
 print(g5b[[ 'RENDA_MEDIA']].apply(maior))
 
 ########################
+# 3ra opçao
+########################
 # # Ordena o DataFrame por RENDA_MEDIA em ordem decrescente
-# dfOrdenado = dfCompleto.sort_values(by='RENDA_MEDIA', ascending=False)
+dfOrdenado = dfCompleto.sort_values(by='RENDA_MEDIA', ascending=False)
 
 # # Agrupa por REGIAO e pega as 3 primeiras cidades de cada região
-# maior_renda_por_regiao = dfOrdenado.groupby('REGIAO').head(3)
+maior_renda_por_regiao = dfOrdenado.groupby('REGIAO').head(3)
 
-# print(maior_renda_por_regiao[['REGIAO', 'RENDA_MEDIA']].sort_values(by='REGIAO'))
+print(maior_renda_por_regiao[['REGIAO', 'RENDA_MEDIA']].sort_values(by='REGIAO'))
 ###########################
 
 print('\n------------------------------------------------------')

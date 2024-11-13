@@ -16,7 +16,7 @@ print('Trabalhando com PANDAS')
 print('=================================')
 '''
     
-O arquivo Herois20212Final.xlsx armazena os dados de personagens (heróis, vilões,
+O arquivo Herois2023_2.xlsx armazena os dados de personagens (heróis, vilões,
 etc) de obras de ficção como histórias em quadrinhos, filmes, séries, etc. 
 Os personagens têm um alinhamento moral (bem, mal ou neutro) e em sua maioria 
 possuem super-poderes.
@@ -97,7 +97,7 @@ print('Questão 1 - (1.8 pontos)')
 #======================================================================
 # 1- Conhecendo o dfInfo:
 # (0,3) a- Exiba as informações da estrutura do DataFrame
-# (0,3) b- Mostre os nomes dos personagens que estão com altura ausente
+# (0,3) b- Mostre os nomes dos personagens que estão com peso ausente
 # (0,3) c- Total de votos atribuídos aos personagens do mal (Alinhamento)
 # (0,3) d- Mostre o percentual de personagens com ano de lançamento
 #          abaixo de 1960
@@ -111,43 +111,36 @@ print('Questão 1 - (1.8 pontos)')
 print('------------------------------------------------------')
 print('1.a- Estrutura do dfInfo ')
 print('------------------------------------------------------')
-print(dfInfo.info())
 
 print('------------------------------------------------------')
-print('1.b- Mostre os nomes dos personagens que estão com altura ausente')
+print('1.b- Mostre os nomes dos personagens que estão com peso ausente')
 print('------------------------------------------------------')
 
-print(dfInfo[dfInfo['Peso'].isnull()].index)
 
 print('------------------------------------------------------')
 
 print('1.c- Total de votos atribuídos aos personagens do mal')
 print('------------------------------------------------------')
 
-f1c = dfInfo[dfInfo['Alinhamento'] == 'MAL']
-print(f1c['Votos'].sum())
 
 print('------------------------------------------------------')
 print('''1.d- Percentual de personagens com ano de lançamento
 #          abaixo de 1960''')
 print('------------------------------------------------------')
 
-f1d = dfInfo[dfInfo['AnoLancamento'] < 1960]
-print(f1d['AnoLancamento'].count())
-percent = (f1d['AnoLancamento'].count())
 
 print('------------------------------------------------------')
 print('''1.e- Quantidade de especies, altura máxima e 
          o peso mediano por  cor de cabelo''')
 print('------------------------------------------------------')
-g1e = dfInfo.groupby('Cabelo')
-print(g1e.agg({'Especie':'count','Altura':'max','Peso':'median'}))
+
 
 print('------------------------------------------------------')
 print('1.f- Tabela de frequência do cruzamento de Alinhamento X Especie')
 print('------------------------------------------------------')
 
-print(pd.crosstab(dfInfo['Alinhamento'],dfInfo['Especie']))
+
+
 
 print('==============================================')
 print('Questão 2 - (1.5 pontos)')
@@ -173,39 +166,23 @@ print('Questão 2 - (1.5 pontos)')
 print('------------------------------------------------------')
 print('2.a- Quantidade de personagens por mídia de lançamento')
 print('------------------------------------------------------')
-
-g2a = dfInfo.groupby('MidiaLancamento')
-print(g2a['MidiaLancamento'].count())
-
+ 
 print('------------------------------------------------------')
-print('2.b- Nome, espécie dos personagens mais votados')
+print('2.b- Nome, cabelo dos personagens mais votados')
 print('------------------------------------------------------')
-
-queridos = dfInfo[dfInfo['Votos'] == dfInfo['Votos'].max()]
 
 print('------------------------------------------------------')
 print('2.c- Idades mínima, máxima e mediana dos personagens')
 print('------------------------------------------------------')
-
-dfInfo['Idade'] = (2023 - dfInfo['AnoLancamento'])
-print(dfInfo['Idade'].agg(['min','max','median']))
-
+ 
 print('------------------------------------------------------')
-print('2.d- As categorias de popularidade dos 10 primeiros personagens')
+print('2.d- As categorias de popularidade dos 5 ultimos personagens')
 print('------------------------------------------------------')
-
-dfInfo['Popularidade'] = pd.cut(dfInfo['Votos'], bins = [0,150,300,dfInfo['Votos'].max()], labels = ['baixa','media','alta'])
-print(dfInfo['Popularidade'].tail(5))
-
+ 
 print('------------------------------------------------------')
 print('2.e- Gráfico pizza da tabela de frequência percentual das faixas de popularidade')
 print('------------------------------------------------------')
  
-tabfreq = dfInfo['Popularidade'].value_counts(normalize=True)*100
-
-plt.pie(tabfreq,labels=tabfreq.index, autopct='%1.1f%%')
-plt.show()
-
 print('==============================================')
 print('Questão 3 - (0.9 pontos)')
 #======================================================================',
@@ -225,24 +202,16 @@ print('Questão 3 - (0.9 pontos)')
 print('------------------------------------------------------')
 print('3.a- 8 primeiros personagens após eliminação da coluna Pele, ordenados pelo nome')
 print('------------------------------------------------------')
-
-dfInfo.drop(['Pele'], axis = 1, inplace = True)
-print(dfInfo.head(8))
-
+ 
 print('------------------------------------------------------')
 print('3.b- coluna Peso dos 5 primeiros personagens de dfInfo após preenchimento')
 print('------------------------------------------------------')
-
-g3b = dfInfo.groupby('Especie')
-dfInfo.fillna(value = {'Peso':g3b.Idade.transform('mean')},inplace = True)
-print(dfInfo['Peso'].head(5))
-
+ 
 print('------------------------------------------------------')
 print('''3.c- Especie, Alinhamento, Peso, Altura e Popularidade
       dos 30 primeiros personagens após alterações, ordenado por especie''')
 print('------------------------------------------------------')
  
-print(dfInfo['Especie','Alinhamento','Peso','Altura','Popularidade'].head(30).sort_values(by='Especie',ascending = True))
 
 print('==============================================')
 print('Questão 4 - (1.8 pontos)')
